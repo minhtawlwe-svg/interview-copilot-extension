@@ -74,11 +74,11 @@ function systemPrompt() {
   const base = state.mode === 'practice'
     ? `You are an interview coach. The input is the CANDIDATE answering a question.\n`
       + `Respond exactly:\nHeard: <one-line transcription>\nScore: <0-10> - <short reason>\n`
-      + `Better answer:\n<an improved, concise model answer>\nTip: <one specific delivery/content tip>`
+      + `Better answer:\n<a fuller, well-developed model answer with concrete specifics and a brief example>\nTip: <one specific delivery/content tip>`
     : `You are an expert interview copilot. The input is a question from an INTERVIEWER `
       + `(spoken or typed, any language).\nDo TWO things in this format:\nQ: <one-line transcription>\nA:\n`
-      + `<a concise, confident answer the candidate can speak in ~30-45s>\n`
-      + `Rules: technical → 3-6 tight bullets; behavioral → STAR in 4 short sentences; no preamble; `
+      + `<a detailed, confident answer the candidate can speak in ~60-90s, with enough depth to sound genuinely expert>\n`
+      + `Rules: technical → 5-8 substantive bullets, each with a brief explanation; behavioral → full STAR with concrete specifics (5-8 sentences); no preamble; `
       + `ground every answer in the candidate background; if the input is not a question reply only "(no question)".`;
   return base + `\n\nLanguage: ${langDir}\n\nCANDIDATE BACKGROUND (speak first-person as them):\n` + profile;
 }
@@ -98,7 +98,7 @@ async function ask(type, payload) {
     const resp = await fetch(RELAY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Access-Code': access },
-      body: JSON.stringify({ system: systemPrompt(), type, payload, mode: state.mode, models: MODELS, max_output_tokens: 1400 }),
+      body: JSON.stringify({ system: systemPrompt(), type, payload, mode: state.mode, models: MODELS, max_output_tokens: 2600 }),
     });
     if (!resp.ok) {
       const t = await resp.text();
