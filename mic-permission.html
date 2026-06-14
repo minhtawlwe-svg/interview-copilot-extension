@@ -4,22 +4,27 @@
 <meta charset="UTF-8">
 <title>Allow microphone — Interview Copilot</title>
 <style>
-  :root{--brand:#a9802f;--brand-d:#8c6b2a;--warm:#c07a2a;--gold:#b0883a;
-    --txt:#3a2b1b;--muted:#6e5a40;--bg2:#f7f2e6;--border:#ddcfac}
+  :root{--brand:#3c4452;--brand-d:#2a313c;--txt:#222a36;--muted:#4f5867;--border:rgba(255,255,255,.55);
+    --blur:blur(18px) saturate(1.5)}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,#faf5ea,#f4efe2);font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--txt)}
-  .card{width:min(560px,92vw);background:#fbf7ee;border:1px solid var(--border);border-radius:16px;
-    box-shadow:0 10px 34px rgba(90,68,28,.12);padding:30px 32px;text-align:center}
-  .bar{height:4px;border-radius:4px;margin:-30px -32px 22px;background:linear-gradient(90deg,var(--brand) 0%,var(--gold) 55%,var(--warm) 100%)}
-  .crest{height:60px;margin-bottom:8px}
+    background:
+      radial-gradient(700px 460px at 12% -8%,rgba(120,160,255,.30),transparent 60%),
+      radial-gradient(640px 440px at 92% 6%,rgba(255,150,210,.22),transparent 60%),
+      radial-gradient(600px 520px at 60% 112%,rgba(120,225,205,.22),transparent 60%),
+      linear-gradient(135deg,#eef1f7,#e6eaf2 50%,#efe9f1);background-attachment:fixed;
+    font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--txt)}
+  .card{width:min(560px,92vw);background:rgba(255,255,255,.38);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+    border:1px solid var(--border);border-radius:20px;box-shadow:0 12px 40px rgba(40,52,74,.18);padding:30px 32px;text-align:center}
+  .bar{height:4px;border-radius:4px;margin:-30px -32px 22px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent)}
+  .crest{height:60px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(40,52,74,.18))}
   h1{font-family:Georgia,'Times New Roman',serif;font-size:21px;margin:0 0 6px;letter-spacing:.04em}
   .sub{color:var(--muted);font-size:13px;margin:0 0 20px}
   .icon{font-size:40px;margin-bottom:6px}
-  #msg{font-size:15px;line-height:1.6;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin:0 0 18px}
-  button{background:linear-gradient(135deg,#c8a85e,var(--brand-d));color:#fff8e8;border:0;border-radius:10px;
-    padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(140,107,42,.3)}
-  button:hover{filter:brightness(1.05)}
+  #msg{font-size:15px;line-height:1.6;background:rgba(255,255,255,.32);border:1px solid var(--border);border-radius:13px;padding:14px 16px;margin:0 0 18px;backdrop-filter:blur(6px)}
+  button{background:rgba(60,68,82,.84);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:12px;
+    padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(40,52,74,.24);backdrop-filter:blur(6px)}
+  button:hover{background:rgba(48,55,68,.92)}
   .steps{text-align:left;color:var(--muted);font-size:12.5px;line-height:1.7;margin:18px 0 0}
   .steps b{color:var(--txt)}
 </style>
