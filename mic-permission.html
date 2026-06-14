@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Allow microphone — Interview Copilot</title>
+<style>
+  :root{--agb-blue:#1B50E5;--agb-blue-d:#1640B5;--agb-orange:#F5821F;--txt:#16213a;--muted:#6b7686;--bg2:#f5f7fb;--border:#e3e8f2}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,#f3f6ff,#ffffff);font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--txt)}
+  .card{width:min(560px,92vw);background:#fff;border:1px solid var(--border);border-radius:16px;
+    box-shadow:0 8px 30px rgba(22,33,58,.10);padding:30px 32px;text-align:center}
+  .bar{height:4px;border-radius:4px;margin:-30px -32px 22px;background:linear-gradient(90deg,var(--agb-blue) 0%,var(--agb-blue) 62%,var(--agb-orange) 100%)}
+  h1{font-size:20px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+  .icon{font-size:42px;margin-bottom:10px}
+  #msg{font-size:15px;line-height:1.6;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:14px 16px;margin:0 0 18px}
+  button{background:linear-gradient(135deg,var(--agb-blue),var(--agb-blue-d));color:#fff;border:0;border-radius:10px;
+    padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(27,80,229,.3)}
+  button:hover{filter:brightness(1.05)}
+  .steps{text-align:left;color:var(--muted);font-size:12.5px;line-height:1.7;margin:18px 0 0}
+  .steps b{color:var(--txt)}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="bar"></div>
+    <div class="icon">🎤</div>
+    <h1>Allow the microphone</h1>
+    <p class="sub">Interview Copilot needs one-time mic permission for <b>Practice mode</b>.</p>
+    <p id="msg">Requesting microphone access…</p>
+    <button id="retry" style="display:none">Request again</button>
+    <div class="steps">
+      <b>If you see a permission prompt:</b> click <b>Allow</b>.<br>
+      <b>If it was blocked:</b> click the 🔒 / 🎚️ icon at the left of the address bar above → set <b>Microphone → Allow</b> → press <b>Request again</b>.<br>
+      When it says allowed, close this tab and press <b>Record my answer</b> in the side panel.
+    </div>
+  </div>
+  <script src="mic-permission.js"></script>
+</body>
+</html>
