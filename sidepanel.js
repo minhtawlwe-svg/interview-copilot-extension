@@ -90,7 +90,8 @@ async function ask(type, payload) {
   const key = ($('#apiKey').value || '').trim();
   const access = ($('#access').value || '').trim();
   if (!access) { $('#setup').open = true; flash('Enter the access code the owner gave you (Setup) first.'); return; }
-  if (!key) { $('#setup').open = true; flash('Paste your Gemini API key in Setup first.'); return; }
+  // Key is OPTIONAL: a Live code works with no key (AI included). A Prep/free
+  // code with no key is rejected by the relay and we explain below.
   if (state.answering) return;
   state.answering = true; setStatus('Thinking…', 'var(--accent)');
   // Pause the offscreen capturer's VAD while we stream an answer (no effect in picker mode).
@@ -101,13 +102,18 @@ async function ask(type, payload) {
     const resp = await fetch(RELAY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Gemini-Key': key, 'X-Access-Code': access },
-      body: JSON.stringify({ system: systemPrompt(), type, payload, models: MODELS, max_output_tokens: 1400 }),
+      body: JSON.stringify({ system: systemPrompt(), type, payload, mode: state.mode, models: MODELS, max_output_tokens: 1400 }),
     });
     if (!resp.ok) {
       const t = await resp.text();
-      out.textContent += resp.status === 403 ? '\n[!] Access denied. Your access code is missing, wrong, or has been revoked by the owner.\n'
+      out.textContent += resp.status === 403 ? (t.includes('prep-only')
+          ? '\n[!] This is a PREP code — only Practice mode works. Switch Mode to Practice, or ask the owner for a Live code.\n'
+          : '\n[!] Access denied. Your access code is missing, wrong, expired, or revoked by the owner.\n')
+        : (resp.status === 400 && t.includes('prep code')) ? '\n[!] This PREP code needs your own free Gemini key — paste one in Setup (free at aistudio.google.com/apikey). A Live code works with no key.\n'
         : resp.status === 401 ? '\n[!] Your API key was rejected — check it in Setup.\n'
-        : resp.status === 429 ? '\n[!] Free quota reached on your key(s). Add another key (comma-separated) or wait for the daily reset.\n'
+        : resp.status === 429 ? (t.includes('DAILY_LIMIT')
+            ? '\n[!] You\'ve used today\'s question limit on this access code. It resets tomorrow.\n'
+            : '\n[!] Free quota reached on your key(s). Add another key (comma-separated) or wait for the daily reset.\n')
         : `\n[relay error ${resp.status}] ${t.slice(0, 160)}\n`;
       setStatus('Error', 'var(--red)'); return;
     }

@@ -5,42 +5,44 @@
 <title>Interview Copilot</title>
 <style>
   :root{
-    /* AGB Communication brand palette */
-    --agb-blue:#1B50E5; --agb-blue-d:#1640B5; --agb-orange:#F5821F; --agb-orange-d:#DB6E0C;
-    --bg:#ffffff; --bg2:#f5f7fb; --panel:#ffffff; --panel2:#eef2f9; --hover:#e7edf7;
-    --border:#e3e8f2; --border2:#d4dce9; --txt:#16213a; --txt2:#4a5568; --muted:#8b95a7;
-    --accent:#1B50E5; --accent2:#1640B5; --green:#1f9d57; --yellow:#e3b341; --orange:#F5821F; --red:#e5484d;
+    /* Interview Copilot - cream & gold palette */
+    --brand:#a9802f; --brand-d:#8c6b2a; --warm:#c07a2a; --warm-d:#9d5f1f;
+    --bg:#f7f2e6; --bg2:#efe7d6; --panel:#fbf7ee; --panel2:#f1e9d7; --hover:#ece2cc;
+    --border:#ddcfac; --border2:#cdbb90; --txt:#3a2b1b; --txt2:#6e5a40; --muted:#9c8a6f;
+    --accent:#a9802f; --accent2:#8c6b2a; --gold:#b0883a;
+    --green:#5b7d3a; --yellow:#c79a2e; --orange:#c07a2a; --red:#b5462f;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter','Segoe UI',system-ui,sans-serif;
     font-size:13px;line-height:1.5;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
-  /* thin AGB accent bar (blue → orange) */
+  .serif{font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif}
+  /* thin gold accent bar */
   body::before{content:"";display:block;height:3px;flex:none;
-    background:linear-gradient(90deg,var(--agb-blue) 0%,var(--agb-blue) 62%,var(--agb-orange) 100%)}
+    background:linear-gradient(90deg,var(--brand) 0%,var(--gold) 55%,var(--warm) 100%)}
   header{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--border);
-    background:linear-gradient(180deg,#f3f6ff,#ffffff)}
-  .brand{height:26px;width:auto;display:block;flex:none}
-  .ttl{font-weight:700;font-size:13.5px;color:var(--txt);letter-spacing:.01em}
-  .ttl small{display:block;font-size:9.5px;font-weight:700;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-top:1px}
+    background:linear-gradient(180deg,#faf5ea,#fbf7ee)}
+  .brand{height:34px;width:34px;display:block;flex:none;border-radius:7px}
+  .ttl{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:15px;color:var(--txt);letter-spacing:.06em}
+  .ttl small{display:block;font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--brand-d);text-transform:uppercase;margin-top:1px;font-family:'Inter',sans-serif}
   .spacer{flex:1}
   .stat{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--txt2);font-weight:600}
   .stat .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
   .body{flex:1;overflow:auto;padding:13px;display:flex;flex-direction:column;gap:12px}
-  details{background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 1px 2px rgba(22,33,58,.04)}
-  summary{cursor:pointer;list-style:none;padding:10px 12px;font-weight:700;font-size:12px;color:var(--agb-blue);
-    text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:7px}
+  details{background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 1px 2px rgba(90,68,28,.05)}
+  summary{cursor:pointer;list-style:none;padding:10px 12px;font-weight:700;font-size:12px;color:var(--brand-d);
+    text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:7px;font-family:Georgia,serif}
   summary::-webkit-details-marker{display:none}
   summary .chev{margin-left:auto;transition:.2s;color:var(--muted)}
   details[open] summary .chev{transform:rotate(90deg)}
   .setup-body{padding:0 11px 10px}
-  label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--txt2);margin:10px 0 6px}
-  input[type=password],input[type=text],textarea{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--txt);
+  label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand-d);margin:10px 0 6px}
+  input[type=password],input[type=text],textarea{width:100%;background:#fffdf8;border:1px solid var(--border2);color:var(--txt);
     padding:9px 11px;border-radius:9px;font-size:13px;outline:none;font-family:inherit}
   textarea{resize:vertical;min-height:70px;line-height:1.55}
-  input::placeholder,textarea::placeholder{color:#aab2c0}
-  input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,80,229,.14)}
-  /* compact Setup: shrink API-key + background block */
+  input::placeholder,textarea::placeholder{color:#b6a684}
+  input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(169,128,47,.16)}
+  /* compact Setup */
   summary{padding:8px 11px;font-size:11px}
   .setup-body label{font-size:9.5px;margin:7px 0 4px}
   .setup-body input,.setup-body textarea{font-size:11.5px;padding:6px 9px;border-radius:7px}
@@ -51,36 +53,36 @@
   .togs{display:flex;gap:8px}
   .seg{display:flex;flex:1;background:var(--panel2);border:1px solid var(--border2);border-radius:9px;padding:3px;gap:3px}
   .seg button{flex:1;background:transparent;border:0;color:var(--txt2);padding:6px 4px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600}
-  .seg button.active{background:linear-gradient(135deg,var(--agb-blue),var(--agb-blue-d));color:#fff;box-shadow:0 1px 3px rgba(27,80,229,.3)}
+  .seg button.active{background:linear-gradient(135deg,#c8a85e,var(--brand-d));color:#fff8e8;box-shadow:0 1px 3px rgba(140,107,42,.3)}
   .btn{width:100%;background:var(--panel);border:1px solid var(--border2);color:var(--txt);padding:11px;border-radius:10px;
     cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:.13s}
   .btn:hover{background:var(--hover);border-color:var(--accent)}
   .btn:disabled{opacity:.5;cursor:not-allowed}
-  .btn.tab{background:linear-gradient(135deg,var(--agb-blue),var(--agb-blue-d));border:0;color:#fff;box-shadow:0 2px 6px rgba(27,80,229,.28)}
-  .btn.mic{background:linear-gradient(135deg,var(--agb-orange),var(--agb-orange-d));border:0;color:#fff;box-shadow:0 2px 6px rgba(245,130,31,.28)}
+  .btn.tab{background:linear-gradient(135deg,#c8a85e,var(--brand-d));border:0;color:#fff8e8;box-shadow:0 2px 6px rgba(140,107,42,.28)}
+  .btn.mic{background:linear-gradient(135deg,#cf8a3e,var(--warm-d));border:0;color:#fff;box-shadow:0 2px 6px rgba(157,95,31,.28)}
   .btn.on{animation:pulse 1.3s infinite}
-  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(27,80,229,.45)}50%{box-shadow:0 0 0 7px rgba(27,80,229,0)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(169,128,47,.45)}50%{box-shadow:0 0 0 7px rgba(169,128,47,0)}}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .answer{flex:1;min-height:230px;white-space:pre-wrap;font-size:16.5px;line-height:1.72;overflow:auto;
-    background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:14px;color:var(--txt);
+    background:#fffdf7;border:1px solid var(--border);border-radius:11px;padding:14px;color:var(--txt);
     font-family:'Inter','Myanmar Text','Padauk',sans-serif}
   .answer.empty{color:var(--muted);font-size:13px}
   .ask{display:flex;gap:7px}
   .ask input{flex:1;font-size:15px;padding:11px 13px}
-  .ask .go{width:auto;padding:9px 16px;background:linear-gradient(135deg,var(--agb-blue),var(--agb-blue-d));border:0;color:#fff;box-shadow:0 2px 6px rgba(27,80,229,.28)}
+  .ask .go{width:auto;padding:9px 16px;background:linear-gradient(135deg,#c8a85e,var(--brand-d));border:0;color:#fff8e8;box-shadow:0 2px 6px rgba(140,107,42,.28)}
   .mini{display:flex;gap:8px}
   .mini .btn{padding:8px;font-size:12px}
-  .note{background:rgba(27,80,229,.06);border:1px solid var(--border);border-left:3px solid var(--agb-orange);
+  .note{background:rgba(176,136,58,.07);border:1px solid var(--border);border-left:3px solid var(--warm);
     border-radius:8px;padding:9px 11px;font-size:11.5px;color:var(--txt2)}
   /* recording panel */
-  .recbar{display:none;align-items:center;gap:9px;padding:10px 11px;background:rgba(245,130,31,.08);
+  .recbar{display:none;align-items:center;gap:9px;padding:10px 11px;background:rgba(192,122,42,.08);
     border:1px solid var(--border2);border-left:3px solid var(--orange);border-radius:10px;flex-wrap:wrap}
   .recbar.show{display:flex}
   .recdot{width:11px;height:11px;border-radius:50%;background:var(--red);flex:none;animation:pulseR 1.2s infinite}
-  @keyframes pulseR{0%,100%{box-shadow:0 0 0 0 rgba(229,72,77,.5)}50%{box-shadow:0 0 0 6px rgba(229,72,77,0)}}
+  @keyframes pulseR{0%,100%{box-shadow:0 0 0 0 rgba(181,70,47,.5)}50%{box-shadow:0 0 0 6px rgba(181,70,47,0)}}
   .rectime{font-variant-numeric:tabular-nums;font-weight:800;font-size:13px;min-width:38px}
   .meter{flex:1;height:9px;min-width:60px;background:var(--panel2);border:1px solid var(--border);border-radius:5px;overflow:hidden}
-  .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--agb-blue),var(--agb-orange));transition:width .07s linear}
+  .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--warm));transition:width .07s linear}
   .recbtns{display:flex;gap:6px;width:100%}
   .recbtns .btn{padding:7px;font-size:12px}
   .modeline{font-size:11px;color:var(--muted)}
@@ -88,12 +90,12 @@
   .topbtn:hover{color:var(--txt)}
   footer{padding:7px 13px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);
     display:flex;align-items:center;gap:6px;background:var(--bg2)}
-  footer b{color:var(--agb-blue);font-weight:800;letter-spacing:.02em}
+  footer b{color:var(--brand-d);font-weight:800;letter-spacing:.14em;font-family:Georgia,serif}
 </style>
 </head>
 <body>
 <header>
-  <img class="brand" src="agb-logo.png" alt="AGB Communication">
+  <img class="brand" src="logo-mark.png" alt="Interview Copilot">
   <div class="ttl">Interview Copilot<small>Any role · EN / မြန်မာ</small></div>
   <div class="spacer"></div>
   <span class="stat"><span class="dot" id="statusDot"></span><span id="statusText">Idle</span></span>
@@ -107,9 +109,9 @@
       <label>Access code</label>
       <input type="password" id="access" placeholder="code the owner gave you">
       <div class="hint">Required. This copilot is invite-only — ask the owner for a code. Codes can be revoked anytime.</div>
-      <label>Gemini API key</label>
-      <input type="password" id="apiKey" placeholder="paste your key (AIza… / AQ…)">
-      <div class="hint">Free, no card — get one at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>. Add several (comma-separated) for more quota.</div>
+      <label>Gemini API key — optional</label>
+      <input type="password" id="apiKey" placeholder="Live code? leave blank. Prep code? paste key">
+      <div class="hint"><b>Live code:</b> leave empty — AI included. <b>Prep code:</b> paste your own free key from <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>.</div>
       <label>Your background (answers as you)</label>
       <textarea id="profile" placeholder="e.g. Target role: Marketing Manager. 4 yrs running social campaigns, grew engagement 60%, led a team of 3. Skilled in SEO, analytics, budgeting."></textarea>
     </div>
@@ -131,7 +133,7 @@
   <button class="btn mic" id="micBtn">🎤 <span>Record my answer</span></button>
 
   <!-- Live capture level: bar moves = audio is reaching the copilot -->
-  <div class="recbar" id="liveBar" style="background:rgba(27,80,229,.07);border-left-color:var(--agb-blue)">
+  <div class="recbar" id="liveBar" style="background:rgba(176,136,58,.08);border-left-color:var(--gold)">
     <span class="recdot" style="background:var(--green)"></span>
     <span class="small muted" style="flex:none">tab audio</span>
     <div class="meter"><i id="liveMeterFill"></i></div>
@@ -142,7 +144,7 @@
     <span class="recdot"></span><span class="rectime" id="recTime">0:00</span>
     <div class="meter"><i id="meterFill"></i></div>
     <div class="recbtns">
-      <button class="btn" id="recStop" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:0;color:#fff">■ Stop &amp; send</button>
+      <button class="btn" id="recStop" style="background:linear-gradient(135deg,#c8a85e,var(--brand-d));border:0;color:#fff8e8">■ Stop &amp; send</button>
       <button class="btn" id="recCancel">Cancel</button>
     </div>
   </div>
@@ -160,7 +162,7 @@
   </div>
 
 </div>
-<footer><b>AGB COMMUNICATION</b> · Interview Copilot · Highly Confidential</footer>
+<footer><b>INTERVIEW COPILOT</b> · bring-your-own-key · built with Gemini</footer>
 <script src="sidepanel.js"></script>
 </body>
 </html>
