@@ -3,6 +3,11 @@
 A compact **side-panel** version of Interview Copilot. Everything the web app does,
 but docked beside your call and able to capture the meeting tab in **one click**.
 
+**🛒 Buy / pricing:** https://interview-relay.vercel.app/buy
+**🌐 App:** https://interview-relay.vercel.app
+**📥 Install guide:** https://interview-relay.vercel.app/install
+**⬇ Download (.zip):** https://github.com/minhtawlwe-svg/interview-copilot-extension/releases/latest
+
 - 🖥️ **Capture this tab** — grabs the active tab's audio via `chrome.tabCapture`
   (no screen-share picker). You still hear the call normally. Questions are
   detected and answered automatically (Live mode). Falls back to the screen-share
