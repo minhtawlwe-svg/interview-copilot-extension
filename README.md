@@ -10,13 +10,26 @@ but docked beside your call and able to capture the meeting tab in **one click**
 - 🎤 **Record my answer** — mic with a live level meter + timer (Practice scores it).
 - 💬 **Type** a question for an instant answer.
 - EN / မြန်မာ, Live / Practice, streaming answers. Works for **any field/role** —
-  the answers are grounded in the background you type in Setup.
-- **Bring-your-own-key**: paste your free Gemini key once; it's saved **only on
-  this device** (`chrome.storage.local`, never cloud-synced). Requests go through
-  the same stateless relay (`interview-relay.vercel.app`) so it works even where
-  Gemini is geo-blocked. The relay stores nothing.
-- **Invite-only**: the relay rejects anyone without a valid **access code** the
-  owner issued. See *Owner / access control* below.
+  answers are grounded in the background you type in Setup.
+- 🪟 Frosted-glass UI.
+
+## Access — code only, **no key needed**
+
+Users enter **just an access code** the owner gave them — **no Gemini key**. The AI
+is included: requests go to the relay (`interview-relay.vercel.app`), which uses the
+owner's shared key pool on the user's behalf. Settings are stored **only on this
+device** (`chrome.storage.local`, never cloud-synced). The relay stores nothing.
+
+There are two tiers of code:
+
+- **Practice (free)** — `prep`-tier code. Works in **Practice mode only** (record
+  your answer → score + a better answer + a tip). The owner's free public code is
+  fine to share publicly.
+- **Live (paid)** — `live`-tier code. Unlocks **Live / real-time answering** (tab
+  capture + typed questions) as well as Practice.
+
+A `prep` code used in Live mode is rejected with a clear "needs a Live code" message.
+Each code has a per-day usage limit and can be revoked or expired by the owner.
 
 ## Install (unpacked)
 
@@ -24,35 +37,34 @@ but docked beside your call and able to capture the meeting tab in **one click**
 2. Turn on **Developer mode** (top-right).
 3. Click **Load unpacked** and select this folder
    (`C:\Users\lenovo\interview-copilot-extension`).
-4. Pin the 🎤 icon. Click it (or press **Ctrl+Shift+U**) to open the side panel.
-5. In **Setup**, enter the **access code** the owner gave you, paste your Gemini
-   key (get one free at https://aistudio.google.com/apikey), and write your
-   background.
+4. Pin the icon. Click it (or press **Ctrl+Shift+U**) to open the side panel.
+5. In **Setup**, paste the **access code** the owner gave you and write your
+   background. That's it — no key to enter.
 
 ## Owner / access control
 
-You own this copilot — others can only use it with a code you issue. Codes are
-checked **server-side at your relay**, so a code can be revoked any time.
+You own this copilot; others use it only with a code you issue. Codes are checked
+**server-side at your relay**, so they can be revoked or expired any time.
 
-1. In Vercel → your `interview-relay` project → **Settings → Environment
-   Variables**, add **`ACCESS_CODES`** = a comma/space-separated list of codes,
-   e.g. `alice-7Kq2, bob-9Zr5, demo-temp1`.
-2. **Redeploy** the project (env changes need a new deployment).
-3. Give each person one code. They paste it into **Setup → Access code**.
-4. **Revoke** anyone by deleting their code from `ACCESS_CODES` and redeploying —
-   they get *"Access denied"* on the next request.
-5. Without any `ACCESS_CODES` set, the relay is **locked** (503) for everyone
-   except the owner's desktop app (which authenticates with `RELAY_SECRET`).
+Manage everything from the local admin app (in the `interview-relay` folder):
+double-click **`relay-ui.bat`** → `http://127.0.0.1:8787`:
 
-Each invited user spends **their own** free Gemini quota — codes never expose
-your keys, and the relay can't be used as an open proxy by other websites.
+- **Access codes** tab — issue a code, pick **tier** (prep = free practice, live =
+  paid) and **plan** (1m / 3m / 6m), copy it, or revoke it. Changes push to the
+  relay and go live in ~30–60s.
+- **Gemini keys** tab — add free Gemini keys to the shared pool that serves all
+  users (no per-user keys anymore).
+
+Without any codes issued the relay is **locked** (`503`) for everyone except the
+owner's desktop app (which authenticates with `RELAY_SECRET`).
 
 ## Using it in an interview
 
 - Join the interview in a **browser tab** (Google Meet / Zoom web / Teams web).
-- Open the side panel, make sure **Live** is selected, click **Capture this tab**.
+- Open the side panel, make sure **Live** is selected (needs a Live code), click
+  **Capture this tab**.
 - As the interviewer speaks, answers appear. Glance, speak, done.
-- For a phone/desktop-app interview, use **Record my answer** or the typed box.
+- For a phone / desktop-app interview, use **Record my answer** or the typed box.
 
 ## Notes
 
