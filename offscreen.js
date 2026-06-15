@@ -4,7 +4,9 @@
 // call), runs the same energy-VAD as the mic path, and posts each detected
 // speech segment back to the side panel as a base64 WAV. Levels stream back too.
 
-const SR = 16000, SILENCE_RMS = 0.012, HANG_MS = 900, MIN_MS = 1000, MAX_MS = 30000;
+// Keep these in lockstep with sidepanel.js. HANG_MS = silence before a segment is
+// sent; lowered for snappier turn-around in live capture.
+const SR = 16000, SILENCE_RMS = 0.012, HANG_MS = 700, MIN_MS = 800, MAX_MS = 30000;
 
 function downsample(buf, inRate) {
   if (inRate === SR) return buf;

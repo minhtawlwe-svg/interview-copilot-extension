@@ -34,7 +34,9 @@
   .ttl small{display:block;font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--txt2);text-transform:uppercase;margin-top:1px;font-family:'Inter',sans-serif}
   .spacer{flex:1}
   .stat{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--txt2);font-weight:600}
-  .stat .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .stat .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:background .2s}
+  .stat .dot.working{animation:dotpulse 1s ease-in-out infinite}
+  @keyframes dotpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
   .body{flex:1;overflow:auto;padding:13px;display:flex;flex-direction:column;gap:12px}
   details{background:var(--glass);border:1px solid var(--border);border-radius:13px;backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);box-shadow:0 6px 20px rgba(40,52,74,.10)}
   summary{cursor:pointer;list-style:none;padding:10px 12px;font-weight:700;font-size:12px;color:var(--brand-d);
@@ -113,9 +115,9 @@
   <details id="setup">
     <summary>⚙️ Setup <span class="chev">›</span></summary>
     <div class="setup-body">
-      <label>Access code</label>
-      <input type="password" id="access" placeholder="code the owner gave you">
-      <div class="hint">Required. This copilot is invite-only — ask the owner for a code. The AI is included; no key needed. Codes can be revoked anytime.</div>
+      <label>Your Gemini API key(s)</label>
+      <textarea id="key" placeholder="paste one or more free Gemini API keys — one per line"></textarea>
+      <div class="hint">Free for everyone — bring your own key(s). Get them free at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. <b>Add several keys (one per line) from different Google accounts</b> for more free quota — when one runs out it switches to the next. Keys stay on this device and are only forwarded to Google.</div>
       <label>Your background (answers as you)</label>
       <textarea id="profile" placeholder="e.g. Target role: Marketing Manager. 4 yrs running social campaigns, grew engagement 60%, led a team of 3. Skilled in SEO, analytics, budgeting."></textarea>
     </div>
@@ -166,7 +168,7 @@
   </div>
 
 </div>
-<footer><b>INTERVIEW COPILOT</b> · access-code only · AI included</footer>
+<footer><b>INTERVIEW COPILOT</b> · free · bring your own Gemini key</footer>
 <script src="sidepanel.js"></script>
 </body>
 </html>

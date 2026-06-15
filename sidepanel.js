@@ -2,7 +2,9 @@
 const $ = s => document.querySelector(s);
 const RELAY = 'https://interview-relay.vercel.app/api/ask';
 const MODELS = ['gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.5-flash'];
-const SR = 16000, SILENCE_RMS = 0.012, HANG_MS = 900, MIN_MS = 1000, MAX_MS = 30000;
+// HANG_MS = silence after speech before a segment is sent (the main "feels slow"
+// knob — lower = snappier, too low risks splitting one question into two).
+const SR = 16000, SILENCE_RMS = 0.012, HANG_MS = 700, MIN_MS = 800, MAX_MS = 30000;
 
 const state = { mode: 'live', lang: 'en', answering: false };
 
@@ -25,15 +27,15 @@ async function migrateFromSync() {
 }
 async function loadSettings() {
   await migrateFromSync();
-  $('#access').value  = await store.get('access', '');
+  $('#key').value     = await store.get('key', '') || await store.get('access', '');
   $('#profile').value = await store.get('profile', '');
   state.mode = await store.get('mode', 'live');
   state.lang = await store.get('lang', 'en');
   syncSeg('#modeSeg', state.mode); syncSeg('#langSeg', state.lang);
-  if (!$('#access').value) $('#setup').open = true;  // first run
+  if (!$('#key').value) $('#setup').open = true;  // first run
   updateModeLine();
 }
-$('#access').addEventListener('input', e => store.set('access', e.target.value.trim()));
+$('#key').addEventListener('input', e => store.set('key', e.target.value.trim()));
 $('#profile').addEventListener('input', e => store.set('profile', e.target.value));
 
 function syncSeg(sel, val) {
@@ -85,30 +87,40 @@ function systemPrompt() {
 
 // ---- relay call (streams the answer) ----
 async function ask(type, payload) {
-  const access = ($('#access').value || '').trim();
-  if (!access) { $('#setup').open = true; flash('Enter the access code the owner gave you (Setup) first.'); return; }
-  // Access-code-only: the AI is included via the relay. Users never enter a key.
+  // One or more keys (one per line / comma / space). HTTP headers can't contain
+  // newlines, so normalize to a comma-separated list; the relay rotates across them.
+  const key = ($('#key').value || '').split(/[\s,]+/).filter(Boolean).join(',');
+  if (!key) { $('#setup').open = true; flash('Add your free Gemini API key in Setup first — get one at aistudio.google.com/apikey'); return; }
+  // Free for all: each user brings their own Gemini key(s); the relay only forwards them.
   if (state.answering) return;
   state.answering = true; setStatus('Thinking…', 'var(--accent)');
+  $('#statusDot').classList.add('working');
   // Pause the offscreen capturer's VAD while we stream an answer (no effect in picker mode).
   chrome.runtime.sendMessage({ cmd: 'answering', value: true }).catch(() => {});
   const out = $('#answer'); out.classList.remove('empty');
   out.textContent += (out.textContent && !out.textContent.endsWith('\n') ? '\n' : '') + '──────────\n';
+  // Instant feedback: blink a typing caret where the answer will appear, so the
+  // gap between "send" and the first token never feels dead. Cleared the moment
+  // real text arrives (or on error).
+  const anchor = out.textContent;
+  let blink = true, thinking = setInterval(() => {
+    out.textContent = anchor + (blink ? '▌' : ' '); blink = !blink; out.scrollTop = out.scrollHeight;
+  }, 450);
+  const stopThinking = () => { if (thinking) { clearInterval(thinking); thinking = null; out.textContent = anchor; } };
   try {
     const resp = await fetch(RELAY, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Access-Code': access },
+      headers: { 'Content-Type': 'application/json', 'X-Gemini-Key': key },
       body: JSON.stringify({ system: systemPrompt(), type, payload, mode: state.mode, models: MODELS, max_output_tokens: 2600 }),
     });
     if (!resp.ok) {
+      stopThinking();
       const t = await resp.text();
-      out.textContent += resp.status === 403 ? (t.includes('prep-only')
-          ? '\n[!] This is a PREP code — only Practice mode works. Switch Mode to Practice, or ask the owner for a Live code.\n'
-          : '\n[!] Access denied. Your access code is missing, wrong, expired, or revoked by the owner.\n')
-        : (resp.status === 401 || resp.status === 503) ? '\n[!] AI temporarily unavailable. Please tell the owner.\n'
-        : resp.status === 429 ? (t.includes('DAILY_LIMIT')
-            ? '\n[!] You\'ve used today\'s question limit on this access code. It resets tomorrow.\n'
-            : '\n[!] The service is busy right now — please try again in a moment.\n')
+      out.textContent += resp.status === 401 ? (t.includes('NO_KEY')
+          ? '\n[!] Add your free Gemini API key in Setup — get one at aistudio.google.com/apikey\n'
+          : '\n[!] Your Gemini key was rejected. Check it, or make a new free one at aistudio.google.com/apikey\n')
+        : resp.status === 503 ? '\n[!] Service temporarily unavailable — please try again in a moment.\n'
+        : resp.status === 429 ? '\n[!] Your key\'s free quota is used up right now — wait a bit, or add a different free key in Setup.\n'
         : `\n[relay error ${resp.status}] ${t.slice(0, 160)}\n`;
       setStatus('Error', 'var(--red)'); return;
     }
@@ -116,14 +128,20 @@ async function ask(type, payload) {
     while (true) {
       const { done, value } = await reader.read(); if (done) break;
       const chunk = dec.decode(value, { stream: true });
-      if (chunk) { got = true; out.textContent += chunk; out.scrollTop = out.scrollHeight; }
+      if (chunk) {
+        if (!got) { stopThinking(); setStatus('Answering…', 'var(--green)'); }  // first token landed
+        got = true; out.textContent += chunk; out.scrollTop = out.scrollHeight;
+      }
     }
+    stopThinking();
     out.textContent += got ? '\n' : '(no answer)\n';
     setStatus('Ready', 'var(--green)');
   } catch (e) {
-    out.textContent += `\n[connection error] ${e}\n`; setStatus('Error', 'var(--red)');
+    stopThinking(); out.textContent += `\n[connection error] ${e}\n`; setStatus('Error', 'var(--red)');
   } finally {
+    stopThinking();
     state.answering = false;
+    $('#statusDot').classList.remove('working');
     chrome.runtime.sendMessage({ cmd: 'answering', value: false }).catch(() => {});
   }
 }
